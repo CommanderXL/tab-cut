@@ -208,7 +208,7 @@
   let activeTab = null
   const {
     runtime
-  } = chrome 
+  } = chrome
 
   document.addEventListener('keydown', e => {
     let currKey = e.keyCode
@@ -220,6 +220,7 @@
           if (activeIndex === tabsNum) activeIndex = 0
         }
       } else {
+        setTabsListStyle()
         runtime.sendMessage({
           greeting: 'Hello'
         }, ({
@@ -242,7 +243,7 @@
       runtime.sendMessage({
         type: 0,
         tabId: tabsList[activeIndex].id
-      })     
+      })
     }
   })
 
@@ -301,16 +302,48 @@
 
   function setTabsListStyle() {
     const styleTag = document.createElement('style')
-    styleTag.innerText = `
-      .tab-wrapper * {
-        margin: 0;
-        padding: 0;
+    const styleObj = {
+      '#tab-wrapper *': {
+        margin: 0,
+        padding: 0
+      },
+      '#tab-wrapper': {
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        'z-index': 900
+      },
+      '#tab-mask': {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        'background-color': '#000',
+        opacity: .3
+      },
+      '#tab-box': {
+        position: 'absolute',
+        top: '40%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        'background-color': '#fff',
+        'z-index': 999,
+        width: '300px',
+        height: '200px',
+        'overflow-y': 'auto'
+      },
+      '#tab-wrapper .tabs-ul .tabs-li': {
+        'list-style': 'none'
+      },
+      '.tabs-li.tabs-active': {
+        'background-color': '#000',
+        color: '#fff'
       }
-      .tab-wrapper ul li {
-        list-style: none;
-      }
-    `
-    styleTag.innerText.replace('\<br\>', '')
+    }
+    styleTag.innerText = toCss(styleObj)
     document.head.appendChild(styleTag)
   }
 
@@ -336,6 +369,21 @@
 
     const reg = new RegExp('(^|\\s)' + className + '(\\s|$)', 'g')
     el.className = el.className.replace(reg, ' ')
+  }
+
+  function toCss(obj = {}) {
+    if (!obj || typeof obj !== 'object') {
+      throw new Error('Invalid object provided')
+    }
+
+    const selectors = Object.keys(obj)
+    return selectors
+      .map(selector => {
+        const definition = obj[selector]
+        const rules = Object.keys(definition).map(rule => `${rule}:${definition[rule]}`).join(';')
+        return `${selector}{${rules}}`
+      })
+      .join('')
   }
 
 
