@@ -17,6 +17,9 @@
     "http://*/*",
     "https://*/*"
   ],
+  "background": {
+    "scripts": ["background.js"]
+  },
   "content_scripts": [
     {
       "matches": [
@@ -24,7 +27,7 @@
         "https://*/*"
       ],
       "js": [
-        "background.js"
+        "content-script.js"
       ]
     }
   ] 
