@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title></title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+      #tab-wrapper * {
+        margin: 0;
+        padding: 0;
+      }
+      #tab-wrapper {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 900;
+      }
+      #tab-mask {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #000;
+        opacity: .3;
+      }
+      #tab-box {
+        position: absolute;
+        top: 40%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: #fff;
+        z-index: 999;
+        width: 300px;
+        height: 200px;
+        overflow-y: auto;
+      }
+      #tab-wrapper .tabs-ul .tabs-li {
+        list-style: none;
+      }
+      .tabs-li.tabs-active {
+        background-color: #000;
+        color: #fff;
+      }
+    </style>
+  </head>
+  <body>
+  <script src="./content-script.js"></script>
+  </body>
+</html>

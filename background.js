@@ -5,10 +5,14 @@ chrome.runtime.onMessage.addListener((request, sender, sendRes) => {
     // https://developer.chrome.com/extensions/messaging
     chrome.tabs.getAllInWindow((arrTabs) => {
       console.log(arrTabs)
-      sendRes({
-        tabLen: arrTabs
-      })
+      sendRes({ arrTabs })
     })
     return true
+  } else if (request.type === 0) {
+    chrome.tabs.update(request.tabId, {
+      active: true,
+      highlighted: true,
+      selected: true
+    })
   }
 })
