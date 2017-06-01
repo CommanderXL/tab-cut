@@ -201,6 +201,7 @@
   }]
   const CTRL_KEY_CODE = 17
   const TAB_KEY_CODE = 81
+  let MAX_TAB_LENGTH = (200 / 28) >> 0
   let showFlag = false
   let activeIndex = null
   let tabsNum = 0
@@ -215,9 +216,10 @@
     if (e.ctrlKey && currKey === TAB_KEY_CODE) {
       if (showFlag) {
         if (activeIndex >= 0) {
+          ++activeIndex
+          if (activeIndex === (tabsNum - 1)) activeIndex = 0
           setActiveIndex(activeIndex)
-          activeIndex++
-          if (activeIndex === tabsNum) activeIndex = 0
+          setScrollPos(activeIndex)
         }
       } else {
         setTabsListStyle()
@@ -256,6 +258,16 @@
     })
   }
 
+  // 设置滚动条的位置
+  function setScrollPos(activeIndex) {
+    let num = 0
+    if (activeIndex > (MAX_TAB_LENGTH - 1) && activeIndex < (tabsNum - 1)) {
+      num = (activeIndex + 1) - MAX_TAB_LENGTH
+    }
+    let tabBox = document.querySelector('#tab-box')
+    tabBox && (tabBox.scrollTop = num * 28)
+  }
+
   function setActiveIndex(index) {
     let tabList = [...document.querySelectorAll('.tabs-li')]
     tabList.forEach(tab => {
@@ -288,13 +300,14 @@
     tabsNum = tabs.length
     tabs.forEach((tab, index) => {
       let liNode = document.createElement('li')
+      liNode.innerHTML = `<img src=${tab.favIconUrl} class="tab-img"><p class="tab-title">${tab.title}</p>`
       if (tab.active) {
         liNode.className = 'tabs-li tabs-active'
         activeIndex = index
       } else {
         liNode.className = 'tabs-li'
       }
-      liNode.innerHTML = tab.title
+      // liNode.innerHTML = tab.title
       ulWrapper.appendChild(liNode)
     })
     return ulWrapper
@@ -336,7 +349,23 @@
         'overflow-y': 'auto'
       },
       '#tab-wrapper .tabs-ul .tabs-li': {
-        'list-style': 'none'
+        'list-style': 'none',
+        'height': '28px',
+        'line-height': '28px',
+      },
+      '.tabs-li .tab-img': {
+        width: '16px',
+        height: '16px',
+        display: 'inline-block',
+        position: 'relative',
+        top: '-8px'
+      },
+      '.tabs-li .tab-title': {
+        'max-width': '80%',
+        'white-space': 'nowrap',
+        'overflow': 'hidden',
+        'text-overflow': 'ellipsis',
+        'display': 'inline-block'
       },
       '.tabs-li.tabs-active': {
         'background-color': '#000',
