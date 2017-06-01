@@ -229,6 +229,7 @@
           arrTabs
         }) => {
           createTabWrapper(arrTabs)
+          setScrollPos()
         })
         // createTabWrapper(mockData, cleanTabWrapper)
       }
@@ -239,6 +240,7 @@
   document.addEventListener('keyup', e => {
     if (!e.ctrlKey && e.keyCode === CTRL_KEY_CODE) {
       let tabWrapper = document.querySelector('#tab-wrapper')
+      if (!tabWrapper) return
       document.body.removeChild(tabWrapper)
       showFlag = false
 
@@ -259,7 +261,7 @@
   }
 
   // 设置滚动条的位置
-  function setScrollPos(activeIndex) {
+  function setScrollPos() {
     let num = 0
     if (activeIndex > (MAX_TAB_LENGTH - 1) && activeIndex < (tabsNum - 1)) {
       num = (activeIndex + 1) - MAX_TAB_LENGTH
