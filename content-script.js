@@ -201,7 +201,7 @@
   }]
   const CTRL_KEY_CODE = 17
   const TAB_KEY_CODE = 81
-  let MAX_TAB_LENGTH = (200 / 28) >> 0
+  let MAX_TAB_LENGTH = (192 / 32) >> 0
   let showFlag = false
   let activeIndex = null
   let tabsNum = 0
@@ -214,14 +214,16 @@
   document.addEventListener('keydown', e => {
     let currKey = e.keyCode
     if (e.ctrlKey && currKey === TAB_KEY_CODE) {
+      // tab窗显示
       if (showFlag) {
         if (activeIndex >= 0) {
           ++activeIndex
-          if (activeIndex === (tabsNum - 1)) activeIndex = 0
+          if (activeIndex === (tabsNum)) activeIndex = 0
           setActiveIndex(activeIndex)
           setScrollPos(activeIndex)
         }
       } else {
+      // tab窗不显示
         setTabsListStyle()
         runtime.sendMessage({
           greeting: 'Hello'
@@ -263,11 +265,11 @@
   // 设置滚动条的位置
   function setScrollPos() {
     let num = 0
-    if (activeIndex > (MAX_TAB_LENGTH - 1) && activeIndex < (tabsNum - 1)) {
+    if (activeIndex >= (MAX_TAB_LENGTH - 1) && activeIndex <= (tabsNum)) {
       num = (activeIndex + 1) - MAX_TAB_LENGTH
     }
     let tabBox = document.querySelector('#tab-box')
-    tabBox && (tabBox.scrollTop = num * 28)
+    tabBox && (tabBox.scrollTop = num * 32)
   }
 
   function setActiveIndex(index) {
@@ -278,6 +280,7 @@
     addClass(tabList[index], 'tabs-active')
   }
 
+  // 创建tab窗口
   function createTabWrapper(tabs, cb) {
     showFlag = true
     tabsList = tabs
@@ -296,20 +299,20 @@
     cb && cb()
   }
 
+  // 创建tab-list列表
   function createTabsList(tabs) {
     let ulWrapper = document.createElement('ul')
     ulWrapper.className = 'tabs-ul'
     tabsNum = tabs.length
     tabs.forEach((tab, index) => {
       let liNode = document.createElement('li')
-      liNode.innerHTML = `<img src=${tab.favIconUrl} class="tab-img"><p class="tab-title">${tab.title}</p>`
+      liNode.innerHTML = `<div class="img-wrapper"><img src=${tab.favIconUrl} class="tab-img"></div><p class="tab-title">${tab.title}</p>`
       if (tab.active) {
         liNode.className = 'tabs-li tabs-active'
         activeIndex = index
       } else {
         liNode.className = 'tabs-li'
       }
-      // liNode.innerHTML = tab.title
       ulWrapper.appendChild(liNode)
     })
     return ulWrapper
@@ -347,22 +350,33 @@
         'background-color': '#fff',
         'z-index': 999,
         width: '300px',
-        height: '200px',
+        height: '192px',
         'overflow-y': 'auto'
       },
       '#tab-wrapper .tabs-ul .tabs-li': {
+        'display': 'flex',
         'list-style': 'none',
-        'height': '28px',
-        'line-height': '28px',
+        height: '32px',
+        'line-height': '32px'
       },
-      '.tabs-li .tab-img': {
+      '#tab-wrapper .tabs-ul .tabs-li .img-wrapper': {
+        position: 'relative',
+        'flex': 'none',
+        height: '32px',
+        width: '32px'
+      },
+      '#tab-wrapper .tabs-ul .tabs-li .tab-img': {
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
         width: '16px',
         height: '16px',
+        'margin-top': '-8px',
+        'margin-left': '-8px',
         display: 'inline-block',
-        position: 'relative',
-        top: '-8px'
       },
       '.tabs-li .tab-title': {
+        flex: 'none',
         'max-width': '80%',
         'white-space': 'nowrap',
         'overflow': 'hidden',
@@ -370,7 +384,7 @@
         'display': 'inline-block'
       },
       '.tabs-li.tabs-active': {
-        'background-color': '#000',
+        'background-color': 'rgb(66, 185, 131)',
         color: '#fff'
       }
     }

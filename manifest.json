@@ -2,7 +2,7 @@
   "manifest_version": 2,
 
   "name": "Tab cut",
-  "description": "This extension shows a Google Image search result for the current page",
+  "description": "专治只开不关tab的懒癌",
   "version": "1.0",
 
   "browser_action": {
